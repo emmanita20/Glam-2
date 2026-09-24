@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1a0f14" />
+<title>Price Card</title>
+<meta property="og:title" content="My Price Card 💄" />
+<meta property="og:description" content="Prices, booking & gallery" />
+<style>
+:root{--bg:#1a0f14;--card:#26161e;--gold:#e8b86d;--rose:#e87a9a;--text:#f7ecef;--muted:#b79aa6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.bg-glow{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 10%,#e87a9a33,transparent 45%),radial-gradient(circle at 85% 80%,#e8b86d2a,transparent 45%)}
+.sparkle{position:fixed;width:4px;height:4px;border-radius:50%;background:var(--gold);opacity:0;animation:twinkle 4s infinite;z-index:-1}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:.9;transform:scale(1.4)}}
+body:not(.ready) .wrap,body:not(.ready) .book{opacity:0}
+.wrap{transition:opacity .4s;max-width:480px;margin:0 auto;padding:28px 18px 110px}
+header{text-align:center;animation:fadeDown .9s ease both}
+.avatar{width:108px;height:108px;border-radius:50%;margin:0 auto 14px;padding:3px;background:conic-gradient(var(--gold),var(--rose),var(--gold));animation:spin 6s linear infinite}
+.avatar>*{width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--card);display:grid;place-items:center;font-size:36px;font-weight:700;color:var(--gold);animation:spin 6s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+h1{font-family:Georgia,serif;font-size:30px;background:linear-gradient(90deg,var(--gold),var(--rose),var(--gold));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+@keyframes shine{to{background-position:200%}}
+.tagline{color:var(--muted);font-size:14px;margin-top:6px}
+.socials{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.socials a{width:42px;height:42px;border-radius:50%;background:var(--card);display:grid;place-items:center;border:1px solid #ffffff14;transition:.25s}
+.socials a:hover,.socials a:active{transform:translateY(-3px);border-color:var(--gold)}
+.socials svg{width:20px;height:20px;fill:var(--text)}
+nav{position:sticky;top:10px;z-index:5;display:flex;background:#26161ecc;backdrop-filter:blur(12px);border-radius:40px;padding:5px;margin:26px 0 18px;border:1px solid #ffffff12}
+nav button{flex:1;border:0;background:none;color:var(--muted);padding:11px 4px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:.3s}
+nav button.active{background:linear-gradient(135deg,var(--gold),var(--rose));color:#1a0f14}
+section{display:none}section.show{display:block;animation:fadeUp .5s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}}
+.cat{background:var(--card);border-radius:20px;padding:18px;margin-bottom:14px;border:1px solid #ffffff0d;opacity:0;animation:fadeUp .6s ease forwards}
+.cat h2{font-size:17px;margin-bottom:12px;color:var(--gold);display:flex;gap:8px;align-items:center}
+.item{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px dashed #ffffff18;gap:12px}
+.item:last-child{border:0}
+.item small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.price{font-weight:700;white-space:nowrap;color:var(--rose)}
+.acct{background:linear-gradient(135deg,#3a2230,#26161e);border-radius:20px;padding:20px;margin-bottom:14px;border:1px solid #e8b86d33;position:relative;overflow:hidden;opacity:0;animation:fadeUp .6s ease forwards}
+.acct::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,#ffffff14,transparent);animation:sweep 3.5s infinite}
+@keyframes sweep{to{left:130%}}
+.acct .bank{color:var(--gold);font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.acct .num{font-size:26px;font-weight:700;letter-spacing:2px;margin:8px 0 4px;font-family:monospace}
+.acct .name{color:var(--muted);font-size:14px}
+.copy{position:absolute;right:16px;top:16px;z-index:1;border:0;background:var(--gold);color:#1a0f14;padding:8px 14px;border-radius:20px;font-weight:700;font-size:13px;cursor:pointer}
+.note{color:var(--muted);font-size:13px;text-align:center;line-height:1.5;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#3a2230,#5a2f42);cursor:pointer;opacity:0;animation:pop .5s ease forwards}
+.tile:nth-child(3n+1){aspect-ratio:3/5}
+@keyframes pop{from{opacity:0;transform:scale(.85)}}
+.tile img,.tile video{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.tile:hover img{transform:scale(1.07)}
+.tile .cap{position:absolute;bottom:0;left:0;right:0;padding:24px 10px 9px;font-size:12px;background:linear-gradient(transparent,#000a)}
+.tile .play{position:absolute;top:8px;right:8px;background:#0008;border-radius:20px;padding:3px 9px;font-size:11px}
+.ph{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;opacity:.5}
+.lightbox{position:fixed;inset:0;background:#000e;z-index:20;display:none;align-items:center;justify-content:center;padding:20px}
+.lightbox.show{display:flex;animation:fadeUp .3s}
+.lightbox img,.lightbox video{max-width:100%;max-height:85vh;border-radius:14px}
+.lightbox .x{position:absolute;top:18px;right:20px;font-size:32px;color:#fff;background:none;border:0;cursor:pointer}
+.book{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:calc(100% - 36px);max-width:444px;padding:16px;border-radius:40px;text-align:center;font-weight:700;color:#1a0f14;text-decoration:none;background:linear-gradient(135deg,var(--gold),var(--rose));box-shadow:0 10px 30px #e87a9a55;animation:pulse 2.4s infinite;z-index:10}
+@keyframes pulse{0%,100%{box-shadow:0 10px 30px #e87a9a55}50%{box-shadow:0 10px 44px #e8b86daa}}
+.toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-80px);background:var(--gold);color:#1a0f14;padding:10px 20px;border-radius:30px;font-weight:700;transition:.35s;z-index:30}
+.toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="wrap">
+  <header>
+    <div class="avatar" id="avatar"></div>
+    <h1 id="brand"></h1>
+    <p class="tagline" id="tagline"></p>
+    <div class="socials" id="socials"></div>
+  </header>
+
+  <nav>
+    <button class="active" data-tab="prices">💄 Prices</button>
+    <button data-tab="pay">💳 Pay</button>
+    <button data-tab="gallery">📸 Gallery</button>
+  </nav>
+
+  <section id="prices" class="show"></section>
+  <section id="pay"></section>
+  <section id="gallery"><div class="grid" id="grid"></div></section>
+</div>
+
+<a class="book" id="book" target="_blank">📅 Book on WhatsApp</a>
+<div class="lightbox" id="lb"><button class="x" onclick="closeLb()">×</button><div id="lbContent"></div></div>
+<div class="toast" id="toast">Copied! ✓</div>
+
+<script>
+let CARD;
+(async()=>{
+const DEFAULT_CARD={
+  brand: "Your Brand Name",
+  tagline: "Makeup Artist • Gele Stylist • Lagos",
+  logo: "",
+  whatsapp: "",
+  currency: "₦",
+  paymentNote: "A 50% deposit secures your booking. Please send your receipt on WhatsApp.",
+  socials: { instagram: "", tiktok: "", facebook: "", whatsapp: "", youtube: "" },
+  prices: [
+    { category: "Makeup", icon: "💄", items: [
+      { name: "Soft Glam", price: 25000, note: "" },
+      { name: "Full Glam", price: 35000, note: "" },
+      { name: "Bridal Makeup", price: 80000, note: "Includes trial" } ] },
+    { category: "Gele", icon: "👑", items: [
+      { name: "Regular Gele", price: 10000, note: "" },
+      { name: "Bridal Gele", price: 20000, note: "" } ] },
+    { category: "Make-You-Look Packages", icon: "✨", items: [
+      { name: "Makeup + Gele Combo", price: 40000, note: "" } ] }
+  ],
+  accounts: [{ bank: "Bank Name", number: "0000000000", name: "Account Name" }],
+  gallery: []
+};
+try{
+  const r=await fetch("/api/data",{cache:"no-store"});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  CARD=await r.json();
+  try{localStorage.setItem("cardCache",JSON.stringify(CARD))}catch(e){}
+}catch(e){
+  console.warn("Card data unavailable, using fallback:",e);
+  try{CARD=JSON.parse(localStorage.getItem("cardCache"))}catch(_){}
+  if(!CARD) CARD=DEFAULT_CARD;
+}
+CARD=Object.assign({},DEFAULT_CARD,CARD);
+CARD.socials=(CARD.socials&&!Array.isArray(CARD.socials))?CARD.socials:{};
+CARD.prices=CARD.prices||[];CARD.accounts=CARD.accounts||[];CARD.gallery=CARD.gallery||[];
+const $=id=>document.getElementById(id);
+const fmt=n=>CARD.currency+Number(n).toLocaleString();
+
+// Header
+document.title=CARD.brand+" | Price Card";
+$("brand").textContent=CARD.brand;
+$("tagline").textContent=CARD.tagline;
+const initials=CARD.brand.split(" ").map(w=>w[0]).join("").slice(0,2);
+$("avatar").innerHTML=CARD.logo?`<img src="${CARD.logo}" onerror="this.outerHTML='<div>${initials}</div>'">`:`<div>${initials}</div>`;
+if(!CARD.whatsapp)$("book").style.display="none";
+$("book").href=`https://wa.me/${CARD.whatsapp}?text=${encodeURIComponent("Hi "+CARD.brand+", I'd like to book a session 💄")}`;
+
+// Social icons (SVG paths)
+const ICONS={
+ instagram:'<path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 7a5 5 0 100 10 5 5 0 000-10zm0 8.2a3.2 3.2 0 110-6.4 3.2 3.2 0 010 6.4zm5.2-9.6a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"/>',
+ tiktok:'<path d="M19.6 6.7a4.8 4.8 0 01-3.8-4.2V2h-3.4v13.7a2.9 2.9 0 11-2-2.7V9.5a6.3 6.3 0 105.4 6.2V8.8a8.2 8.2 0 004.8 1.5V6.9l-1-.2z"/>',
+ whatsapp:'<path d="M17.5 14.4c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8.2 8.2 0 01-4-3.5c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 00-.8.4 3.5 3.5 0 00-1.1 2.6 6 6 0 001.3 3.2 13.8 13.8 0 005.3 4.7c2 .8 2.7.9 3.7.8a3.1 3.1 0 002-1.4 2.5 2.5 0 00.2-1.4c-.1-.1-.3-.2-.6-.3zM12 21.8a9.9 9.9 0 01-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.9 9.9 0 1112 21.8zM12 0a12 12 0 00-10.3 18L0 24l6.2-1.6A12 12 0 1012 0z"/>',
+ facebook:'<path d="M24 12a12 12 0 10-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v2.9h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0024 12z"/>',
+ youtube:'<path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/>'
+};
+const SOC=CARD.socials||{};
+$("socials").innerHTML=["instagram","tiktok","facebook","whatsapp","youtube"].filter(k=>SOC[k]).map(k=>{let url=SOC[k].trim();if(k==="whatsapp"&&!url.startsWith("http"))url="https://wa.me/"+url.replace(/\D/g,"");else if(!url.startsWith("http"))url="https://"+url;return `<a href="${url}" target="_blank" aria-label="${k}"><svg viewBox="0 0 24 24">${ICONS[k]}</svg></a>`}).join("");
+
+// Prices
+$("prices").innerHTML=CARD.prices.map((c,i)=>`
+ <div class="cat" style="animation-delay:${i*.12}s">
+  <h2><span>${c.icon||"✨"}</span>${c.category}</h2>
+  ${c.items.map(it=>`<div class="item"><div>${it.name}${it.note?`<small>${it.note}</small>`:""}</div><div class="price">${it.price===""||it.price==null?"":fmt(it.price)}</div></div>`).join("")}
+ </div>`).join("");
+
+// Accounts
+$("pay").innerHTML=CARD.accounts.map((a,i)=>`
+ <div class="acct" style="animation-delay:${i*.12}s">
+  <button class="copy" onclick="copy('${a.number}')">Copy</button>
+  <div class="bank">${a.bank}</div><div class="num">${a.number}</div><div class="name">${a.name}</div>
+ </div>`).join("")+`<p class="note">${CARD.paymentNote}</p>`;
+
+window.copy=function(t){navigator.clipboard?.writeText(t).catch(()=>{});const el=$("toast");el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1500)}
+
+// Gallery
+$("grid").innerHTML=CARD.gallery.map((g,i)=>`
+ <div class="tile" style="animation-delay:${i*.08}s" onclick="openLb(${i})">
+  <div class="ph">${g.type==="video"?"🎬":"💄"}</div>
+  ${g.type==="video"
+    ?`<video src="${g.src}" muted loop playsinline autoplay onerror="this.remove()"></video><span class="play">▶ Video</span>`
+    :`<img src="${g.src}" loading="lazy" onerror="this.remove()">`}
+  ${g.caption?`<div class="cap">${g.caption}</div>`:""}
+ </div>`).join("");
+
+window.openLb=function(i){const g=CARD.gallery[i];$("lbContent").innerHTML=g.type==="video"?`<video src="${g.src}" controls autoplay playsinline></video>`:`<img src="${g.src}">`;$("lb").classList.add("show")}
+window.closeLb=function(){$("lb").classList.remove("show");$("lbContent").innerHTML=""}
+$("lb").onclick=e=>{if(e.target.id==="lb")closeLb()};
+
+window.CARD=CARD;
+// Tabs
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll("section").forEach(x=>x.classList.remove("show"));
+  b.classList.add("active");$(b.dataset.tab).classList.add("show");
+});
+
+// Sparkles
+for(let i=0;i<18;i++){const s=document.createElement("div");s.className="sparkle";s.style.left=Math.random()*100+"vw";s.style.top=Math.random()*100+"vh";s.style.animationDelay=Math.random()*4+"s";document.body.appendChild(s)}
+document.body.classList.add("ready");
+})();
+</script>
+</body>
+</html>
